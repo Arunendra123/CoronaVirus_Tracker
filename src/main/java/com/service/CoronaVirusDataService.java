@@ -38,12 +38,16 @@ public class CoronaVirusDataService {
     	 Reader in=new StringReader(response.body());
     	 Iterable<CSVRecord> records = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(in);
     	 for (CSVRecord record : records) {
-    		 localList.add(new LocationStats(record.get("Province/State"),record.get("Country/Region"),Integer.parseInt(record.get(record.size()-1))));
-    	     System.out.println(record);
+    		 int totalcases= Integer.parseInt(record.get(record.size()-1));
+    		 int diff=Integer.parseInt(record.get(record.size()-1))-Integer.parseInt(record.get(record.size()-2));
+    		 localList.add(new LocationStats(record.get("Province/State"),record.get("Country/Region"),totalcases,diff));
     	 }
     	 
     	 //updating global just avoid concurrency issue
     	 globalList=localList;
      }
-	 
+
+	public List<LocationStats> getGlobalList() {
+		return globalList;
+	}	 
 }
